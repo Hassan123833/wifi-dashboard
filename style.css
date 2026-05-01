@@ -1,0 +1,97 @@
+/* import google font */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+
+
+html,
+body,
+[class*="css"] {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f7fa;
+    color: #333333;
+}
+
+h1,
+h2,
+h3 {
+    color: #1a1a2e;
+    font-weight: 600;
+}
+
+[data-testid="stSidebar"] {
+    background-color: #1a1a2e !important;
+    color: white;
+}
+
+
+[data-testid="stSidebar"] .css-1d391kg {
+    color: white;
+}
+
+
+[data-testid="stMetric"] {
+    background-color: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+
+[data-testid="stMetricValue"] {
+    color: #e94560 !important;
+    font-size: 1.9rem !important;
+    font-weight: 600 !important;
+}
+
+
+[data-testid="stMetricLabel"] {
+    color: #888888 !important;
+    font-size: 0.8rem !important;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+
+hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 15px 0;
+}
+
+[data-testid="stDataFrame"] {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+}
+
+/* file uploader box */
+[data-testid="stFileUploader"] {
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 10px;
+    background-color: white;
+}
+
+/* success message */
+.stSuccess {
+    border-radius: 8px;
+}
+
+/* warning message */
+.stWarning {
+    border-radius: 8px;
+}
+
+
+.stDownloadButton button {
+    background-color: #e94560;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+.stDownloadButton button:hover {
+    background-color: #c73652;
+}
