@@ -33,8 +33,7 @@ dark_theme_css = """
   [data-testid="stSidebar"] {
     background-color: var(--bg-sidebar);
   }
-  /* Sidebar Text Color */
-[data-testid="stSidebar"] * {
+ [data-testid="stSidebar"] *:not([data-testid="stFileUploadDropzone"]):not([data-testid="stFileUploadDropzone"] *) {
   color: #ffffff !important;
 }
 
