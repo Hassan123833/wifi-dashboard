@@ -6,103 +6,223 @@ import charts
 
 st.set_page_config(page_title="University WiFi Analytics", layout="wide")
 
-# --- THEME SWITCHER LOGIC ---
-is_dark = st.sidebar.toggle("🌙 Dark Mode", value=True)
+import streamlit as st
 
-if is_dark:
-    charts.set_theme(True)
-    
-    # Midnight Cyan Theme (Dark Mode)
-    theme_css = """
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
-        
-        /* Main Backgrounds & Header */
-        [data-testid="stAppViewContainer"] { background-color: #0f172a !important; color: #f8fafc !important; }
-        [data-testid="stSidebar"] { background-color: #020617 !important; }
-        [data-testid="stHeader"] { background-color: transparent !important; }
-        
-        /* Top Metric Cards */
-        [data-testid="stMetric"] { background-color: #1e293b !important; border: 1px solid #334155 !important; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5); }
-        [data-testid="stMetricValue"] { color: #06b6d4 !important; font-size: 1.9rem !important; font-weight: 600 !important;}
-        [data-testid="stMetricLabel"] { color: #94a3b8 !important; }
-        
-        /* File Uploader Dropzone */
-        [data-testid="stFileUploadDropzone"] { background-color: #0f172a !important; border: 2px dashed #334155 !important; color: #f8fafc !important; }
-        
-        /* Dropdowns & Select Boxes */
-        div[data-baseweb="select"] > div { background-color: #0f172a !important; border-color: #334155 !important; color: #f8fafc !important; }
-        div[data-baseweb="popover"] div { background-color: #020617 !important; color: #cbd5e1 !important; }
-        
-        /* Multiselect Tags (Cyan) */
-        span[data-baseweb="tag"] { background-color: #164e63 !important; color: #22d3ee !important; }
-        
-        /* Slider Color (Cyan) */
-        div[data-baseweb="slider"] div[data-testid="stTickBar"] > div { background-color: #06b6d4 !important; }
-        div[data-baseweb="slider"] div[role="slider"] { background-color: #06b6d4 !important; }
-        
-        /* Buttons */
-        .stDownloadButton button { background-color: #06b6d4 !important; color: #020617 !important; font-weight: 600; border: none; border-radius: 6px; }
-        
-        hr { border-top: 1px solid #334155; }
-        
-        /* Hide Default Streamlit Menu */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-    </style>
-    """
+# --- Theme Switcher ---
+dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
 
+# === DARK MODE THEME ===
+dark_theme_css = """
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+
+  :root {
+    --bg-main: #0f172a;
+    --bg-sidebar: #020617;
+    --accent: #06b6d4;
+    --text-primary: #f8fafc;
+    --border: #334155;
+  }
+
+  /* Main Backgrounds */
+  [data-testid="stAppViewContainer"] {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+  [data-testid="stSidebar"] {
+    background-color: var(--bg-sidebar);
+  }
+  /* Sidebar Text Color */
+[data-testid="stSidebar"] * {
+  color: #ffffff !important;
+}
+
+  [data-testid="stHeader"] {
+    background-color: transparent;
+  }
+
+  /* Metric Cards */
+  [data-testid="stMetric"] {
+    background-color: #1e293b;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
+    transition: all 0.3s ease-in-out;
+  }
+  [data-testid="stMetric"]:hover {
+    transform: translateY(-3px);
+  }
+  [data-testid="stMetricValue"] {
+    color: var(--accent);
+    font-size: 1.9rem;
+    font-weight: 600;
+  }
+  [data-testid="stMetricLabel"] {
+    color: #94a3b8;
+  }
+
+  /* File Upload */
+  [data-testid="stFileUploadDropzone"] {
+    background-color: var(--bg-main);
+    border: 2px dashed var(--border);
+    color: var(--text-primary);
+  }
+
+  /* Dropdowns & Select Boxes */
+  div[data-baseweb="select"] > div {
+    background-color: var(--bg-main);
+    border-color: var(--border);
+    color: var(--text-primary);
+  }
+  div[data-baseweb="popover"] div {
+    background-color: var(--bg-sidebar);
+    color: #cbd5e1;
+  }
+
+  /* Multiselect Tags */
+  span[data-baseweb="tag"] {
+    background-color: #164e63;
+    color: var(--accent);
+  }
+
+  /* Slider */
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {
+    background-color: var(--accent);
+  }
+  div[data-baseweb="slider"] div[role="slider"] {
+    background-color: var(--accent);
+  }
+
+  /* Buttons */
+  .stDownloadButton button {
+    background-color: var(--accent);
+    color: var(--bg-sidebar);
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+  .stDownloadButton button:hover {
+    background-color: #0891b2;
+  }
+
+  hr { border-top: 1px solid var(--border); }
+
+  /* Hide Default Streamlit Menu */
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
+</style>
+"""
+
+# === LIGHT MODE THEME ===
+light_theme_css = """
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+
+  :root {
+    --bg-main: #f8fafc;
+    --bg-sidebar: #f1f5f9;
+    --accent: #2563eb;
+    --text-primary: #334155;
+    --border: #cbd5e1;
+  }
+
+  /* Main Backgrounds */
+  [data-testid="stAppViewContainer"] {
+    background-color: var(--bg-main);
+    color: var(--text-primary);
+  }
+  [data-testid="stSidebar"] {
+    background-color: var(--bg-sidebar);
+    color: var(--text-primary);
+  }
+  [data-testid="stHeader"] {
+    background-color: transparent;
+  }
+
+  /* Metric Cards */
+  [data-testid="stMetric"] {
+    background-color: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 15px 20px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    transition: all 0.3s ease-in-out;
+  }
+  [data-testid="stMetric"]:hover {
+    transform: translateY(-3px);
+  }
+  [data-testid="stMetricValue"] {
+    color: var(--accent);
+    font-size: 1.9rem;
+    font-weight: 600;
+  }
+  [data-testid="stMetricLabel"] {
+    color: #64748b;
+  }
+
+  /* File Upload */
+  [data-testid="stFileUploadDropzone"] {
+    background-color: #ffffff;
+    border: 2px dashed var(--border);
+    color: var(--text-primary);
+  }
+
+  /* Dropdowns & Select Boxes */
+  div[data-baseweb="select"] > div {
+    background-color: #ffffff;
+    border-color: var(--border);
+    color: var(--text-primary);
+  }
+  div[data-baseweb="popover"] div {
+    background-color: #ffffff;
+    color: var(--text-primary);
+  }
+
+  /* Multiselect Tags */
+  span[data-baseweb="tag"] {
+    background-color: #bfdbfe;
+    color: var(--accent);
+  }
+
+  /* Slider */
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {
+    background-color: var(--accent);
+  }
+  div[data-baseweb="slider"] div[role="slider"] {
+    background-color: var(--accent);
+  }
+
+  /* Buttons */
+  .stDownloadButton button {
+    background-color: var(--accent);
+    color: #ffffff;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    transition: background 0.3s ease;
+  }
+  .stDownloadButton button:hover {
+    background-color: #1e40af;
+  }
+
+  hr { border-top: 1px solid var(--border); }
+
+  /* Hide Default Streamlit Menu */
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
+</style>
+"""
+
+# Apply theme
+if dark_mode_enabled:
+    st.markdown(dark_theme_css, unsafe_allow_html=True)
 else:
-    charts.set_theme(False)
-    
-    # Enterprise Blue Theme (Light Mode)
-    theme_css = """
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-        html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
-        
-        /* Main Backgrounds & Header */
-        [data-testid="stAppViewContainer"] { background-color: #f8fafc !important; color: #334155 !important; }
-        [data-testid="stSidebar"] { background-color: #f1f5f9 !important; color: #334155 !important; }
-        [data-testid="stSidebar"] * { color: #334155 !important; }
-        [data-testid="stHeader"] { background-color: transparent !important; }
-        
-        /* Top Metric Cards */
-        [data-testid="stMetric"] { background-color: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        [data-testid="stMetricValue"] { color: #2563eb !important; font-size: 1.9rem !important; font-weight: 600 !important;}
-        [data-testid="stMetricLabel"] { color: #64748b !important; }
-        
-        /* File Uploader Dropzone - FORCE LIGHT MODE */
-        [data-testid="stFileUploadDropzone"] { background-color: #ffffff !important; border: 2px dashed #cbd5e1 !important; }
-        [data-testid="stFileUploadDropzone"] * { color: #334155 !important; }
-        
-        /* Dropdowns & Select Boxes - FORCE LIGHT MODE */
-        div[data-baseweb="select"] > div { background-color: #ffffff !important; border-color: #cbd5e1 !important; color: #334155 !important; }
-        div[data-baseweb="select"] * { color: #334155 !important; }
-        div[data-baseweb="popover"] { background-color: #ffffff !important; }
-        div[data-baseweb="popover"] div { background-color: #ffffff !important; color: #334155 !important; }
-        
-        /* Multiselect Tags (Blue) */
-        span[data-baseweb="tag"] { background-color: #bfdbfe !important; color: #1d4ed8 !important; }
-        
-        /* Slider Color (Blue) */
-        div[data-baseweb="slider"] div[data-testid="stTickBar"] > div { background-color: #2563eb !important; }
-        div[data-baseweb="slider"] div[role="slider"] { background-color: #2563eb !important; }
-        
-        /* Buttons */
-        .stDownloadButton button { background-color: #2563eb !important; color: #ffffff !important; font-weight: 600; border: none; border-radius: 6px; }
-        
-        hr { border-top: 1px solid #e2e8f0; }
-        
-        /* Hide Default Streamlit Menu */
-        #MainMenu {visibility: hidden;}
-        footer {visibility: hidden;}
-    </style>
-    """
-    
-st.markdown(theme_css, unsafe_allow_html=True)
-# -----------------------------
+    st.markdown(light_theme_css, unsafe_allow_html=True)
+
 
 st.sidebar.title("WiFi Analytics")
 st.sidebar.markdown("---")

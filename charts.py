@@ -207,9 +207,9 @@ def make_upload_chart(df, upload_col):
     group_counts = speed_groups.value_counts().reindex(group_order, fill_value=0)
 
     if IS_DARK_MODE:
-        bar_colors = ["#207c9e", "#12a3cf", "#07b7e7", "#12c7f5", "#43e3ff", "#87ecfc"]
+        bar_colors = ["#164e63", "#155e75", "#0e7490", "#0891b2", "#06b6d4", "#22d3ee"]
     else:
-        bar_colors = ["#b1d3fc", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
+        bar_colors = ["#bfdbfe", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
 
     # draw the chart
     fig, ax = plt.subplots(figsize=(9, 4))
@@ -264,9 +264,9 @@ def make_networks_chart(df, networks_col):
     group_counts = network_groups.value_counts().reindex(group_order, fill_value=0)
 
     if IS_DARK_MODE:
-        bar_colors = ["#207c9e", "#12a3cf", "#07b7e7", "#12c7f5", "#43e3ff", "#87ecfc"]
+        bar_colors = ["#164e63", "#155e75", "#0e7490", "#0891b2", "#06b6d4", "#22d3ee"]
     else:
-        bar_colors = ["#b1d3fc", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
+        bar_colors = ["#bfdbfe", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
 
     fig, ax = plt.subplots(figsize=(9, 4))
     bars = ax.barh(group_counts.index, group_counts.values,
@@ -346,9 +346,9 @@ def make_duration_chart(df):
     group_counts = duration_groups.value_counts().reindex(group_order, fill_value=0)
 
     if IS_DARK_MODE:
-        bar_colors = ["#207c9e", "#12a3cf", "#07b7e7", "#12c7f5", "#43e3ff", "#87ecfc"]
+        bar_colors = ["#164e63", "#155e75", "#0e7490", "#0891b2", "#06b6d4", "#22d3ee"]
     else:
-        bar_colors = ["#b1d3fc", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
+        bar_colors = ["#bfdbfe", "#93c5fd", "#60a5fa", "#3b82f6", "#2563eb", "#1d4ed8"]
 
 
     fig, ax = plt.subplots(figsize=(9, 4))
