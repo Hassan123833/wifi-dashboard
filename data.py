@@ -279,10 +279,10 @@ def clean_text_columns(df, column_list):
             df[col] = df[col].astype(str).str.strip()
 
             df[col] = df[col].apply(
-                lambda val: "Unknown" if val.lower() in invalid_values else val
+                lambda val: "Unknown" if str(val).lower() in invalid_values else val
             )
             df[col] = df[col].apply(
-                lambda val: val.capitalize() if val != "Unknown" else val
+                lambda val: str(val).capitalize() if val != "Unknown" else val
             )
 
     return df
@@ -346,12 +346,13 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
 
             df[col] = df[col].astype(str).str.strip()
 
+            # fixed - converts to string first so float NaN never crashes
             df[col] = df[col].apply(
-                lambda val: "Unknown" if val.lower() in invalid_values else val
+                lambda val: "Unknown" if str(val).lower() in invalid_values else val
             )
 
             df[col] = df[col].apply(
-                lambda val: val.capitalize() if val != "Unknown" else val
+                lambda val: str(val).capitalize() if val != "Unknown" else val
             )
 
             if invalid_count > 0:
@@ -412,14 +413,14 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
         mapping = {}
         for orig, clean in zip(df[location_col], df["_loc_clean"]):
             if clean not in mapping:
-               mapping[clean] = orig
-    df[location_col] = df["_loc_clean"].map(mapping)
-    df = df.drop(columns=["_loc_clean"])
-    after_locs = df[location_col].nunique()
-    if before_locs != after_locs:
-        report.append(
-            "Merged " + str(before_locs - after_locs) + " duplicate location names"
-        )
+                mapping[clean] = orig
+        df[location_col] = df["_loc_clean"].map(mapping)
+        df = df.drop(columns=["_loc_clean"])
+        after_locs = df[location_col].nunique()
+        if before_locs != after_locs:
+            report.append(
+                "Merged " + str(before_locs - after_locs) + " duplicate location names"
+            )
 
     # Final summary of the dataset.
 
