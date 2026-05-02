@@ -1,6 +1,5 @@
 [theme]
 # This locks Streamlit's base theme so it stops fighting your custom CSS toggle
-base = "dark"
 primaryColor = "#53CBF3"
 backgroundColor = "#0f172a"
 secondaryBackgroundColor = "#020617"
