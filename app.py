@@ -134,6 +134,52 @@ light_theme_css = """
   /* Download Button */
   .stDownloadButton button { background-color: var(--accent) !important; color: #ffffff !important; font-weight: 600 !important; border: none !important; border-radius: 6px !important; transition: background 0.3s ease; }
   .stDownloadButton button:hover { background-color: #1e40af !important; }
+/* File Upload Dropzone */
+[data-testid="stFileUploadDropzone"] {
+    background-color: #ffffff !important;
+    border: 2px dashed var(--border) !important;
+    color: var(--text-primary) !important;
+}
+
+/* File Uploader Section */
+[data-testid="stFileUploader"] section {
+    background-color: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px !important;
+}
+
+/* Uploaded File Preview */
+[data-testid="stUploadedFile"] {
+    background-color: #ffffff !important;
+    border-radius: 8px !important;
+}
+[data-testid="stUploadedFile"] * {
+    color: var(--text-primary) !important;
+}
+
+/* Upload Button */
+[data-testid="stFileUploader"] button {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+[data-testid="stFileUploader"] button:hover {
+    background-color: #1e40af !important;
+}
+
+/* Download Button */
+.stDownloadButton > button {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+.stDownloadButton > button:hover {
+    background-color: #1e40af !important;
+}
 
   /* Expander (Show/Hide Table) Fix */
   [data-testid="stExpander"] details summary { background-color: #f1f5f9 !important; border-radius: 8px !important; }
