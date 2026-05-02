@@ -104,6 +104,7 @@ DARK_THEME = f"""
 LIGHT_THEME = f"""
 <style>
   {FONT_IMPORT}
+
   :root {{
     --bg-main: #f8fafc;
     --bg-sidebar: #f1f5f9;
@@ -112,13 +113,19 @@ LIGHT_THEME = f"""
     --border: #cbd5e1;
   }}
 
-  /* Layout */
-  [data-testid="stAppViewContainer"] {{ background-color: var(--bg-main) !important; color: var(--text-primary) !important; }}
-  [data-testid="stSidebar"] {{ background-color: var(--bg-sidebar) !important; color: var(--text-primary) !important; }}
+  /* === Layout === */
+  [data-testid="stAppViewContainer"] {{
+    background-color: var(--bg-main) !important;
+    color: var(--text-primary) !important;
+  }}
+  [data-testid="stSidebar"] {{
+    background-color: var(--bg-sidebar) !important;
+    color: var(--text-primary) !important;
+  }}
   [data-testid="stHeader"] {{ background-color: transparent !important; }}
   [data-testid="stSidebar"] * {{ color: var(--text-primary) !important; }}
 
-  /* Metric Cards */
+  /* === Metric Cards === */
   [data-testid="stMetric"] {{
     background-color: #ffffff !important;
     border: 1px solid var(--border) !important;
@@ -128,15 +135,31 @@ LIGHT_THEME = f"""
     transition: all 0.3s ease-in-out;
   }}
   [data-testid="stMetric"]:hover {{ transform: translateY(-3px); }}
-  [data-testid="stMetricValue"] {{ color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }}
+  [data-testid="stMetricValue"] {{
+    color: var(--accent) !important;
+    font-size: 1.9rem !important;
+    font-weight: 600 !important;
+  }}
   [data-testid="stMetricLabel"] {{ color: #64748b !important; }}
 
-  /* File Uploader Elements */
-  [data-testid="stFileUploadDropzone"] {{ background-color: #ffffff !important; border: 2px dashed var(--border) !important; color: var(--text-primary) !important; }}
-  [data-testid="stFileUploader"] section {{ background-color: #ffffff !important; border: 1px solid var(--border) !important; border-radius: 8px; }}
-  [data-testid="stUploadedFile"] {{ background-color: #ffffff !important; border-radius: 8px; }}
+  /* === File Uploader === */
+  [data-testid="stFileUploadDropzone"] > div {{
+    background-color: #ffffff !important;
+    border: 2px dashed var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+  }}
+  [data-testid="stFileUploader"] section {{
+    background-color: #ffffff !important;
+    border: 1px solid var(--border) !important;
+    border-radius: 8px;
+  }}
+  [data-testid="stUploadedFile"] {{
+    background-color: #ffffff !important;
+    border-radius: 8px;
+  }}
   [data-testid="stUploadedFile"] * {{ color: var(--text-primary) !important; }}
-  
+
   [data-testid="stFileUploader"] button {{
     background-color: var(--accent) !important;
     color: #ffffff !important;
@@ -145,51 +168,81 @@ LIGHT_THEME = f"""
     border-radius: 6px !important;
     transition: background 0.3s ease;
   }}
-  [data-testid="stFileUploader"] button:hover {{ background-color: #1e40af !important; }}
+  [data-testid="stFileUploader"] button:hover {{
+    background-color: #1e40af !important;
+  }}
 
-  /* Dropdowns & Select Boxes */
-  div[data-baseweb="select"] > div {{ background-color: #ffffff !important; border-color: var(--border) !important; color: var(--text-primary) !important; }}
-  div[data-baseweb="popover"] div {{ background-color: #ffffff !important; color: var(--text-primary) !important; }}
+  /* === Dropdowns & Select Boxes === */
+  div[data-baseweb="select"] > div {{
+    background-color: #ffffff !important;
+    border-color: var(--border) !important;
+    color: var(--text-primary) !important;
+  }}
+  div[data-baseweb="popover"] div {{
+    background-color: #ffffff !important;
+    color: var(--text-primary) !important;
+  }}
 
-  /* Multiselect Tags */
-  span[data-baseweb="tag"] {{ background-color: #bfdbfe !important; color: var(--accent) !important; }}
+  /* === Multiselect Tags === */
+  span[data-baseweb="tag"] {{
+    background-color: #bfdbfe !important;
+    color: var(--accent) !important;
+  }}
 
-  /* Slider */
-  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{ background-color: var(--accent) !important; }}
-  div[data-baseweb="slider"] div[role="slider"] {{ background-color: var(--accent) !important; }}
+  /* === Slider === */
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{
+    background-color: var(--accent) !important;
+  }}
+  div[data-baseweb="slider"] div[role="slider"] {{
+    background-color: var(--accent) !important;
+  }}
 
-  /* FORCE DOWNLOAD BUTTON BLUE - Stronger Selector */
-  div.stDownloadButton > button {{
-    background-color: #2563eb !important;
+  /* === Download Button (Force Blue) === */
+  button[kind="secondaryFormSubmit"],
+  .stDownloadButton > button,
+  [data-testid="baseButton-secondary"] {{
+    background-color: var(--accent) !important;
     color: #ffffff !important;
     font-weight: 600 !important;
-    border: none !important;
+    border: 1px solid var(--accent) !important;
     border-radius: 6px !important;
   }}
-  div.stDownloadButton > button:hover {{
+  .stDownloadButton > button:hover {{
     background-color: #1e40af !important;
-    color: #ffffff !important;
+    border-color: #1e40af !important;
   }}
 
-  /* Expander */
+  /* === Expander === */
   [data-testid="stExpander"] details summary {{
     background-color: #f1f5f9 !important;
     border-radius: 8px !important;
     color: var(--text-primary) !important;
     font-weight: 600 !important;
   }}
-  [data-testid="stExpander"] details summary:hover {{ background-color: #e2e8f0 !important; }}
-  [data-testid="stExpander"] details summary svg {{ fill: var(--text-primary) !important; }}
+  [data-testid="stExpander"] details summary:hover {{
+    background-color: #e2e8f0 !important;
+  }}
+  [data-testid="stExpander"] details summary svg {{
+    fill: var(--text-primary) !important;
+  }}
+  [data-testid="stExpander"] {{
+    background-color: #ffffff !important;
+    border: 1px solid var(--border) !important;
+  }}
 
-  /* FORCE TABLE CONTAINER LIGHT */
-  [data-testid="stDataFrame"] {{
+  /* === DataFrame / Table === */
+  [data-testid="stDataFrame"],
+  [data-testid="stDataFrame"] > div,
+  [data-testid="stTable"] {{
     background-color: #ffffff !important;
   }}
 
+  /* === Misc === */
   hr {{ border-top: 1px solid var(--border); }}
   #MainMenu, footer {{ visibility: hidden; }}
 </style>
 """
+
 
 # --- Apply Selected Theme ---
 st.markdown(DARK_THEME if dark_mode_enabled else LIGHT_THEME, unsafe_allow_html=True)
@@ -601,12 +654,14 @@ with st.expander("Click here to show or hide the data table"):
             'border-color': '#334155'
         })
     else:
-        # Explicitly force white background and dark text for Light Mode
+        # This is what forces the inner table cells to be light!
         styled_df = display_df.style.set_properties(**{
             'background-color': '#ffffff',
             'color': '#334155',
             'border-color': '#cbd5e1'
-        })
+        }).set_table_styles([
+            {'selector': 'th', 'props': [('background-color', '#f1f5f9'), ('color', '#334155')]}
+        ])
 
     st.dataframe(styled_df, use_container_width=True, height=300)
    
