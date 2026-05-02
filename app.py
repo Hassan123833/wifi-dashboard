@@ -11,7 +11,10 @@ import streamlit as st
 
 # --- Theme Switcher ---
 dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
-
+if dark_mode_enabled:
+    shutil.copy(".streamlit/config_dark.toml", ".streamlit/config.toml")
+else:
+    shutil.copy(".streamlit/config_light.toml", ".streamlit/config.toml")
 
 
 # === DARK MODE THEME ===
@@ -187,24 +190,6 @@ light_theme_css = """
   hr { border-top: 1px solid var(--border); }
   #MainMenu {visibility: hidden;}
   footer {visibility: hidden;}
-  /* TARGET STREAMLIT BUTTON ROOT */
-div.stButton > button,
-div.stDownloadButton > button,
-[data-testid="stFileUploader"] button,
-button[kind="secondaryFormSubmit"] {
-    background-color: #2563eb !important;
-    color: #ffffff !important;
-    border: none !important;
-    border-radius: 6px !important;
-}
-
-/* HOVER */
-div.stButton > button:hover,
-div.stDownloadButton > button:hover,
-[data-testid="stFileUploader"] button:hover {
-    background-color: #1e40af !important;
-    color: #ffffff !important;
-}
 </style>
 """
 
