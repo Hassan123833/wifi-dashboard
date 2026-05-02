@@ -67,7 +67,9 @@ dark_theme_css = """
     border: 2px dashed var(--border);
     color: var(--text-primary);
   }
-
+  div[data-testid="stFileUploadDropzone"] div {
+  background-color: #080616 !important;
+}
   /* Dropdowns & Select Boxes */
   div[data-baseweb="select"] > div {
     background-color: var(--bg-main);
