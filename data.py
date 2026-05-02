@@ -278,12 +278,12 @@ def clean_text_columns(df, column_list):
 
             df[col] = df[col].astype(str).str.strip()
 
-            df[col] = df[col].apply(
-                lambda val: "Unknown" if str(val).lower() in invalid_values else val
-            )
-            df[col] = df[col].apply(
-                lambda val: str(val).capitalize() if val != "Unknown" else val
-            )
+            # fixed: using vectorized operations instead of apply()
+            # apply(lambda) crashes on Arrow-backed pandas in Python 3.14
+            mask = df[col].str.lower().isin(invalid_values)
+            df.loc[mask, col] = "Unknown"
+            not_unknown = df[col] != "Unknown"
+            df.loc[not_unknown, col] = df.loc[not_unknown, col].str.capitalize()
 
     return df
 
@@ -346,14 +346,12 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
 
             df[col] = df[col].astype(str).str.strip()
 
-            # fixed - converts to string first so float NaN never crashes
-            df[col] = df[col].apply(
-                lambda val: "Unknown" if str(val).lower() in invalid_values else val
-            )
-
-            df[col] = df[col].apply(
-                lambda val: str(val).capitalize() if val != "Unknown" else val
-            )
+            # fixed: using vectorized operations instead of apply()
+            # apply(lambda) crashes on Arrow-backed pandas in Python 3.14
+            mask = df[col].str.lower().isin(invalid_values)
+            df.loc[mask, col] = "Unknown"
+            not_unknown = df[col] != "Unknown"
+            df.loc[not_unknown, col] = df.loc[not_unknown, col].str.capitalize()
 
             if invalid_count > 0:
                 report.append(
@@ -361,7 +359,7 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
                     + str(invalid_count)
                     + " empty or invalid values in '"
                     + col
-                    + "' column → replaced with 'Unknown'"
+                    + "' column - replaced with Unknown"
                 )
             else:
                 report.append("No invalid values found in '" + col + "' column")
@@ -407,6 +405,7 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
             )
         else:
             report.append("All rows have a valid location")
+
     if location_col and location_col in df.columns:
         before_locs = df[location_col].nunique()
         df["_loc_clean"] = df[location_col].str.replace(" ", "").str.lower()
