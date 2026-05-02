@@ -11,10 +11,7 @@ import streamlit as st
 
 # --- Theme Switcher ---
 dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
-if dark_mode_enabled:
-    shutil.copy(".streamlit/config_dark.toml", ".streamlit/config.toml")
-else:
-    shutil.copy(".streamlit/config_light.toml", ".streamlit/config.toml")
+
 
 
 # === DARK MODE THEME ===
