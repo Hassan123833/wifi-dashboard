@@ -36,7 +36,10 @@ dark_theme_css = """
   [data-testid="stHeader"] {
     background-color: transparent;
   }
-
+  /* Sidebar Text Color */
+[data-testid="stSidebar"] * {
+  color: #ffffff !important;
+}
   /* Metric Cards */
   [data-testid="stMetric"] {
     background-color: #1e293b;
