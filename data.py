@@ -321,6 +321,11 @@ def clean_full_dataset(df, location_col, device_col, numeric_cols):
 
     total_rows_before = len(df)
 
+    # convert Arrow-backed dtypes to regular numpy dtypes
+    # Arrow backend causes crashes on Streamlit Cloud with Python 3.14
+    df = df.convert_dtypes(convert_string=False)
+    df = df.astype({col: object for col in df.select_dtypes("string").columns})
+
     empty_rows = df.isnull().all(axis=1).sum()
     if empty_rows > 0:
         df = df.dropna(how="all")
