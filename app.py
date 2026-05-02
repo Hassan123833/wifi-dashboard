@@ -133,6 +133,7 @@ light_theme_css = """
 
   /* Download Button */
   .stDownloadButton button { background-color: var(--accent) !important; color: #ffffff !important; font-weight: 600 !important; border: none !important; border-radius: 6px !important; transition: background 0.3s ease; }
+   .stDownloadButton button:hover { background-color: #1e40af !important; }
 /* File Upload Dropzone */
 [data-testid="stFileUploadDropzone"] {
     background-color: #ffffff !important;
