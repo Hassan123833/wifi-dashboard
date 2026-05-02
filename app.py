@@ -10,11 +10,11 @@ st.set_page_config(page_title="University WiFi Analytics", layout="wide")
 import streamlit as st
 
 # --- Theme Switcher ---
-light_mode_enabled = st.sidebar.toggle("🌙 Light Mode", value=True)
-if light_mode_enabled:
-    shutil.copy(".streamlit/config_light.toml", ".streamlit/config.toml")
-else:
+dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
+if dark_mode_enabled:
     shutil.copy(".streamlit/config_dark.toml", ".streamlit/config.toml")
+else:
+    shutil.copy(".streamlit/config_light.toml", ".streamlit/config.toml")
 
 
 # === DARK MODE THEME ===
@@ -194,10 +194,10 @@ light_theme_css = """
 """
 
 # Apply theme
-if light_mode_enabled:
-    st.markdown(light_theme_css, unsafe_allow_html=True)
-else:
+if dark_mode_enabled:
     st.markdown(dark_theme_css, unsafe_allow_html=True)
+else:
+    st.markdown(light_theme_css, unsafe_allow_html=True)
 
 
 st.sidebar.title("WiFi Analytics")
