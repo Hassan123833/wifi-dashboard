@@ -1,251 +1,157 @@
 import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
+import shutil
 import data
 import charts
 
 st.set_page_config(page_title="University WiFi Analytics", layout="wide")
 
+import streamlit as st
+
 # --- Theme Switcher ---
 dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
+if dark_mode_enabled:
+    shutil.copy(".streamlit/config_dark.toml", ".streamlit/config.toml")
+else:
+    shutil.copy(".streamlit/config_light.toml", ".streamlit/config.toml")
 
-# === COMMON STYLES ===
-FONT_IMPORT = """
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
-"""
 
 # === DARK MODE THEME ===
-DARK_THEME = f"""
+dark_theme_css = """
 <style>
-  {FONT_IMPORT}
-  :root {{
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+
+  :root {
     --bg-main: #0f172a;
     --bg-sidebar: #020617;
-    --accent: #53CBF3;
+    --accent: #53CBF3; /* Updated to your preferred Cyan */
     --text-primary: #f8fafc;
     --border: #334155;
-  }}
+  }
 
-  /* Layout */
-  [data-testid="stAppViewContainer"] {{ background-color: var(--bg-main) !important; color: var(--text-primary) !important; }}
-  [data-testid="stSidebar"] {{ background-color: var(--bg-sidebar) !important; }}
-  [data-testid="stHeader"] {{ background-color: transparent !important; }}
-  [data-testid="stSidebar"] * {{ color: #ffffff !important; }}
+  /* Main Backgrounds */
+  [data-testid="stAppViewContainer"] { background-color: var(--bg-main) !important; color: var(--text-primary) !important; }
+  [data-testid="stSidebar"] { background-color: var(--bg-sidebar) !important; }
+  [data-testid="stHeader"] { background-color: transparent !important; }
+  
+  /* Sidebar Text Color */
+  [data-testid="stSidebar"] * { color: #ffffff !important; }
 
   /* Metric Cards */
-  [data-testid="stMetric"] {{
-    background-color: #1e293b !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 10px;
-    padding: 15px 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.5);
-    transition: all 0.3s ease-in-out;
-  }}
-  [data-testid="stMetric"]:hover {{ transform: translateY(-3px); }}
-  [data-testid="stMetricValue"] {{ color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }}
-  [data-testid="stMetricLabel"] {{ color: #94a3b8 !important; }}
+  [data-testid="stMetric"] { background-color: #1e293b !important; border: 1px solid var(--border) !important; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); transition: all 0.3s ease-in-out; }
+  [data-testid="stMetric"]:hover { transform: translateY(-3px); }
+  [data-testid="stMetricValue"] { color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }
+  [data-testid="stMetricLabel"] { color: #94a3b8 !important; }
 
-  /* File Upload */
-  [data-testid="stFileUploadDropzone"] > div {{
-    background-color: #080616 !important;
-    border: 2px dashed var(--border) !important;
-    color: var(--text-primary) !important;
-    border-radius: 8px;
-  }}
-  [data-testid="stFileUploader"] button {{
-    background-color: var(--accent) !important;
-    color: var(--bg-sidebar) !important;
-    font-weight: 600 !important;
-    border: none !important;
-    border-radius: 6px !important;
-    transition: background 0.3s ease;
-  }}
-  [data-testid="stFileUploader"] button:hover {{ background-color: #3baed4 !important; }}
+  /* File Uploader Elements */
+  [data-testid="stFileUploadDropzone"] { background-color: #0f172a !important; border: 2px dashed #334155 !important; color: #f8fafc !important; }
+  [data-testid="stFileUploader"] section { background-color: #080616 !important; border: 1px solid #334155 !important; border-radius: 8px; }
+  [data-testid="stUploadedFile"] { background-color: #080616 !important; border-radius: 8px; }
+  [data-testid="stUploadedFile"] * { color: #f8fafc !important; }
+  
+  /* Browse Files Button */
+  [data-testid="stFileUploader"] button { background-color: #53CBF3 !important; color: #020617 !important; border: none !important; font-weight: 600 !important; border-radius: 6px !important; }
+  [data-testid="stFileUploader"] button:hover { background-color: #3baed4 !important; }
 
   /* Dropdowns & Select Boxes */
-  div[data-baseweb="select"] > div {{ background-color: var(--bg-main) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }}
-  div[data-baseweb="popover"] div {{ background-color: var(--bg-sidebar) !important; color: #cbd5e1 !important; }}
+  div[data-baseweb="select"] > div { background-color: var(--bg-main) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }
+  div[data-baseweb="popover"] div { background-color: var(--bg-sidebar) !important; color: #cbd5e1 !important; }
 
   /* Multiselect Tags */
-  span[data-baseweb="tag"] {{ background-color: #164e63 !important; color: var(--accent) !important; }}
+  span[data-baseweb="tag"] { background-color: #164e63 !important; color: var(--accent) !important; }
 
   /* Slider */
-  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{ background-color: var(--accent) !important; }}
-  div[data-baseweb="slider"] div[role="slider"] {{ background-color: var(--accent) !important; }}
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div { background-color: var(--accent) !important; }
+  div[data-baseweb="slider"] div[role="slider"] { background-color: var(--accent) !important; }
 
   /* Download Button */
-  .stDownloadButton button {{
-    background-color: var(--accent) !important;
-    color: var(--bg-sidebar) !important;
-    font-weight: 600 !important;
-    border: none !important;
-    border-radius: 6px !important;
-    transition: background 0.3s ease;
-  }}
-  .stDownloadButton button:hover {{ background-color: #3baed4 !important; }}
+  .stDownloadButton button { background-color: var(--accent) !important; color: #020617 !important; font-weight: 600 !important; border: none !important; border-radius: 6px !important; transition: background 0.3s ease; }
+  .stDownloadButton button:hover { background-color: #3baed4 !important; }
 
-  /* Expander */
-  [data-testid="stExpander"] details summary {{
-    background-color: #1e293b !important;
-    border-radius: 8px !important;
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-  }}
-  [data-testid="stExpander"] details summary:hover {{ background-color: #334155 !important; }}
-  [data-testid="stExpander"] details summary svg {{ fill: var(--text-primary) !important; }}
+  /* Expander (Show/Hide Table) Fix */
+  [data-testid="stExpander"] details summary { background-color: #1e293b !important; border-radius: 8px !important; }
+  [data-testid="stExpander"] details summary p { color: #f8fafc !important; font-weight: 600 !important; }
+  [data-testid="stExpander"] details summary:hover { background-color: #334155 !important; }
+  [data-testid="stExpander"] details summary svg { fill: #f8fafc !important; }
 
-  hr {{ border-top: 1px solid var(--border); }}
-  #MainMenu, footer {{ visibility: hidden; }}
+  hr { border-top: 1px solid var(--border); }
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
 </style>
 """
 
 # === LIGHT MODE THEME ===
-LIGHT_THEME = f"""
+light_theme_css = """
 <style>
-  {FONT_IMPORT}
+  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
 
-  :root {{
+  :root {
     --bg-main: #f8fafc;
     --bg-sidebar: #f1f5f9;
     --accent: #2563eb;
     --text-primary: #334155;
     --border: #cbd5e1;
-  }}
+  }
 
-  /* === Layout === */
-  [data-testid="stAppViewContainer"] {{
-    background-color: var(--bg-main) !important;
-    color: var(--text-primary) !important;
-  }}
-  [data-testid="stSidebar"] {{
-    background-color: var(--bg-sidebar) !important;
-    color: var(--text-primary) !important;
-  }}
-  [data-testid="stHeader"] {{ background-color: transparent !important; }}
-  [data-testid="stSidebar"] * {{ color: var(--text-primary) !important; }}
+  /* Main Backgrounds - FORCED LIGHT MODE */
+  [data-testid="stAppViewContainer"] { background-color: var(--bg-main) !important; color: var(--text-primary) !important; }
+  [data-testid="stSidebar"] { background-color: var(--bg-sidebar) !important; color: var(--text-primary) !important; }
+  [data-testid="stHeader"] { background-color: transparent !important; }
+  [data-testid="stSidebar"] * { color: #334155 !important; }
 
-  /* === Metric Cards === */
-  [data-testid="stMetric"] {{
-    background-color: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 10px;
-    padding: 15px 20px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-    transition: all 0.3s ease-in-out;
-  }}
-  [data-testid="stMetric"]:hover {{ transform: translateY(-3px); }}
-  [data-testid="stMetricValue"] {{
-    color: var(--accent) !important;
-    font-size: 1.9rem !important;
-    font-weight: 600 !important;
-  }}
-  [data-testid="stMetricLabel"] {{ color: #64748b !important; }}
+  /* Metric Cards */
+  [data-testid="stMetric"] { background-color: #ffffff !important; border: 1px solid var(--border) !important; border-radius: 10px; padding: 15px 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); transition: all 0.3s ease-in-out; }
+  [data-testid="stMetric"]:hover { transform: translateY(-3px); }
+  [data-testid="stMetricValue"] { color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }
+  [data-testid="stMetricLabel"] { color: #64748b !important; }
 
-  /* === File Uploader === */
-  [data-testid="stFileUploadDropzone"] > div {{
-    background-color: #ffffff !important;
-    border: 2px dashed var(--border) !important;
-    color: var(--text-primary) !important;
-    border-radius: 8px;
-  }}
-  [data-testid="stFileUploader"] section {{
-    background-color: #ffffff !important;
-    border: 1px solid var(--border) !important;
-    border-radius: 8px;
-  }}
-  [data-testid="stUploadedFile"] {{
-    background-color: #ffffff !important;
-    border-radius: 8px;
-  }}
-  [data-testid="stUploadedFile"] * {{ color: var(--text-primary) !important; }}
+  /* File Uploader Elements */
+  [data-testid="stFileUploadDropzone"] { background-color: #ffffff !important; border: 2px dashed var(--border) !important; color: var(--text-primary) !important; }
+  [data-testid="stFileUploader"] section { background-color: #ffffff !important; border: 1px solid var(--border) !important; border-radius: 8px; }
+  [data-testid="stUploadedFile"] { background-color: #ffffff !important; border-radius: 8px; }
+  [data-testid="stUploadedFile"] * { color: var(--text-primary) !important; }
+  
+  /* Browse Files Button */
+  [data-testid="stFileUploader"] button { background-color: var(--accent) !important; color: #ffffff !important; border: none !important; font-weight: 600 !important; border-radius: 6px !important; }
+  [data-testid="stFileUploader"] button:hover { background-color: #1e40af !important; }
 
-  [data-testid="stFileUploader"] button {{
-    background-color: var(--accent) !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    border: none !important;
-    border-radius: 6px !important;
-    transition: background 0.3s ease;
-  }}
-  [data-testid="stFileUploader"] button:hover {{
-    background-color: #1e40af !important;
-  }}
+  /* Dropdowns & Select Boxes */
+  div[data-baseweb="select"] > div { background-color: #ffffff !important; border-color: var(--border) !important; color: var(--text-primary) !important; }
+  div[data-baseweb="select"] * { color: var(--text-primary) !important; }
+  div[data-baseweb="popover"] { background-color: #ffffff !important; }
+  div[data-baseweb="popover"] div { background-color: #ffffff !important; color: var(--text-primary) !important; }
 
-  /* === Dropdowns & Select Boxes === */
-  div[data-baseweb="select"] > div {{
-    background-color: #ffffff !important;
-    border-color: var(--border) !important;
-    color: var(--text-primary) !important;
-  }}
-  div[data-baseweb="popover"] div {{
-    background-color: #ffffff !important;
-    color: var(--text-primary) !important;
-  }}
+  /* Multiselect Tags */
+  span[data-baseweb="tag"] { background-color: #bfdbfe !important; color: var(--accent) !important; }
 
-  /* === Multiselect Tags === */
-  span[data-baseweb="tag"] {{
-    background-color: #bfdbfe !important;
-    color: var(--accent) !important;
-  }}
+  /* Slider */
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div { background-color: var(--accent) !important; }
+  div[data-baseweb="slider"] div[role="slider"] { background-color: var(--accent) !important; }
 
-  /* === Slider === */
-  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{
-    background-color: var(--accent) !important;
-  }}
-  div[data-baseweb="slider"] div[role="slider"] {{
-    background-color: var(--accent) !important;
-  }}
+  /* Download Button */
+  .stDownloadButton button { background-color: var(--accent) !important; color: #ffffff !important; font-weight: 600 !important; border: none !important; border-radius: 6px !important; transition: background 0.3s ease; }
+  .stDownloadButton button:hover { background-color: #1e40af !important; }
 
-  /* === Download Button (Force Blue) === */
-  button[kind="secondaryFormSubmit"],
-  .stDownloadButton > button,
-  [data-testid="baseButton-secondary"] {{
-    background-color: var(--accent) !important;
-    color: #ffffff !important;
-    font-weight: 600 !important;
-    border: 1px solid var(--accent) !important;
-    border-radius: 6px !important;
-  }}
-  .stDownloadButton > button:hover {{
-    background-color: #1e40af !important;
-    border-color: #1e40af !important;
-  }}
+  /* Expander (Show/Hide Table) Fix */
+  [data-testid="stExpander"] details summary { background-color: #f1f5f9 !important; border-radius: 8px !important; }
+  [data-testid="stExpander"] details summary p { color: var(--text-primary) !important; font-weight: 600 !important; }
+  [data-testid="stExpander"] details summary:hover { background-color: #e2e8f0 !important; }
+  [data-testid="stExpander"] details summary svg { fill: var(--text-primary) !important; }
 
-  /* === Expander === */
-  [data-testid="stExpander"] details summary {{
-    background-color: #f1f5f9 !important;
-    border-radius: 8px !important;
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-  }}
-  [data-testid="stExpander"] details summary:hover {{
-    background-color: #e2e8f0 !important;
-  }}
-  [data-testid="stExpander"] details summary svg {{
-    fill: var(--text-primary) !important;
-  }}
-  [data-testid="stExpander"] {{
-    background-color: #ffffff !important;
-    border: 1px solid var(--border) !important;
-  }}
-
-  /* === DataFrame / Table === */
-  [data-testid="stDataFrame"],
-  [data-testid="stDataFrame"] > div,
-  [data-testid="stTable"] {{
-    background-color: #ffffff !important;
-  }}
-
-  /* === Misc === */
-  hr {{ border-top: 1px solid var(--border); }}
-  #MainMenu, footer {{ visibility: hidden; }}
+  hr { border-top: 1px solid var(--border); }
+  #MainMenu {visibility: hidden;}
+  footer {visibility: hidden;}
 </style>
 """
 
-
-# --- Apply Selected Theme ---
-st.markdown(DARK_THEME if dark_mode_enabled else LIGHT_THEME, unsafe_allow_html=True)
+# Apply theme
+if dark_mode_enabled:
+    st.markdown(dark_theme_css, unsafe_allow_html=True)
+else:
+    st.markdown(light_theme_css, unsafe_allow_html=True)
 
 
 st.sidebar.title("WiFi Analytics")
@@ -269,7 +175,7 @@ if uploaded_file is not None:
             return all_columns.index(guessed_col)
         return 0
 
-# Making a drop down list for each col.
+    # Making a drop down list for each col.
     st.sidebar.markdown("**Required Columns**")
 
     col_date = st.sidebar.selectbox(
@@ -582,7 +488,7 @@ elif signal_col and signal_col in filtered_df.columns:
 
 st.markdown("---")
 
-#This chart shows for how much time the connection was established.
+# This chart shows for how much time the connection was established.
 if "_duration_min" in filtered_df.columns:
     st.markdown("---")
     st.subheader("Session Duration Distribution")
@@ -590,7 +496,7 @@ if "_duration_min" in filtered_df.columns:
     st.pyplot(duration_chart, use_container_width=True)
     plt.close(duration_chart)
 
-#This chart shows the upload speed.
+# This chart shows the upload speed.
 if upload_col and upload_col in filtered_df.columns:
     st.subheader("Upload Speed Distribution")
     ul_chart = charts.make_upload_chart(filtered_df, upload_col)
@@ -645,23 +551,6 @@ st.markdown("---")
 st.subheader("Raw Data Table")
 
 with st.expander("Click here to show or hide the data table"):
-    display_df = filtered_df.reset_index(drop=True)
-    
-    if dark_mode_enabled: 
-        styled_df = display_df.style.set_properties(**{
-            'background-color': '#0f172a',
-            'color': '#f8fafc',
-            'border-color': '#334155'
-        })
-    else:
-        # This is what forces the inner table cells to be light!
-        styled_df = display_df.style.set_properties(**{
-            'background-color': '#ffffff',
-            'color': '#334155',
-            'border-color': '#cbd5e1'
-        }).set_table_styles([
-            {'selector': 'th', 'props': [('background-color', '#f1f5f9'), ('color', '#334155')]}
-        ])
-
-    st.dataframe(styled_df, use_container_width=True, height=300)
-   
+    st.dataframe(
+        filtered_df.reset_index(drop=True), use_container_width=True, height=300
+    )
