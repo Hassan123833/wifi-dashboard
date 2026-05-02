@@ -131,13 +131,12 @@ LIGHT_THEME = f"""
   [data-testid="stMetricValue"] {{ color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }}
   [data-testid="stMetricLabel"] {{ color: #64748b !important; }}
 
-  /* File Upload */
-  [data-testid="stFileUploadDropzone"] > div {{
-    background-color: #ffffff !important;
-    border: 2px dashed var(--border) !important;
-    color: var(--text-primary) !important;
-    border-radius: 8px;
-  }}
+  /* File Uploader Elements */
+  [data-testid="stFileUploadDropzone"] {{ background-color: #ffffff !important; border: 2px dashed var(--border) !important; color: var(--text-primary) !important; }}
+  [data-testid="stFileUploader"] section {{ background-color: #ffffff !important; border: 1px solid var(--border) !important; border-radius: 8px; }}
+  [data-testid="stUploadedFile"] {{ background-color: #ffffff !important; border-radius: 8px; }}
+  [data-testid="stUploadedFile"] * {{ color: var(--text-primary) !important; }}
+  
   [data-testid="stFileUploader"] button {{
     background-color: var(--accent) !important;
     color: #ffffff !important;
@@ -159,16 +158,18 @@ LIGHT_THEME = f"""
   div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{ background-color: var(--accent) !important; }}
   div[data-baseweb="slider"] div[role="slider"] {{ background-color: var(--accent) !important; }}
 
-  /* Download Button */
-  .stDownloadButton button {{
-    background-color: var(--accent) !important;
+  /* FORCE DOWNLOAD BUTTON BLUE - Stronger Selector */
+  div.stDownloadButton > button {{
+    background-color: #2563eb !important;
     color: #ffffff !important;
     font-weight: 600 !important;
     border: none !important;
     border-radius: 6px !important;
-    transition: background 0.3s ease;
   }}
-  .stDownloadButton button:hover {{ background-color: #1e40af !important; }}
+  div.stDownloadButton > button:hover {{
+    background-color: #1e40af !important;
+    color: #ffffff !important;
+  }}
 
   /* Expander */
   [data-testid="stExpander"] details summary {{
@@ -179,6 +180,11 @@ LIGHT_THEME = f"""
   }}
   [data-testid="stExpander"] details summary:hover {{ background-color: #e2e8f0 !important; }}
   [data-testid="stExpander"] details summary svg {{ fill: var(--text-primary) !important; }}
+
+  /* FORCE TABLE CONTAINER LIGHT */
+  [data-testid="stDataFrame"] {{
+    background-color: #ffffff !important;
+  }}
 
   hr {{ border-top: 1px solid var(--border); }}
   #MainMenu, footer {{ visibility: hidden; }}
@@ -586,6 +592,21 @@ st.markdown("---")
 st.subheader("Raw Data Table")
 
 with st.expander("Click here to show or hide the data table"):
-    st.dataframe(
-        filtered_df.reset_index(drop=True), use_container_width=True, height=300
-    )
+    display_df = filtered_df.reset_index(drop=True)
+    
+    if dark_mode_enabled: 
+        styled_df = display_df.style.set_properties(**{
+            'background-color': '#0f172a',
+            'color': '#f8fafc',
+            'border-color': '#334155'
+        })
+    else:
+        # Explicitly force white background and dark text for Light Mode
+        styled_df = display_df.style.set_properties(**{
+            'background-color': '#ffffff',
+            'color': '#334155',
+            'border-color': '#cbd5e1'
+        })
+
+    st.dataframe(styled_df, use_container_width=True, height=300)
+   
