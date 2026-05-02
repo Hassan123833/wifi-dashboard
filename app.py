@@ -6,222 +6,187 @@ import charts
 
 st.set_page_config(page_title="University WiFi Analytics", layout="wide")
 
-import streamlit as st
-
 # --- Theme Switcher ---
 dark_mode_enabled = st.sidebar.toggle("🌙 Dark Mode", value=True)
 
-# === DARK MODE THEME ===
-dark_theme_css = """
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+# === COMMON STYLES ===
+FONT_IMPORT = """
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
+html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
+"""
 
-  :root {
+# === DARK MODE THEME ===
+DARK_THEME = f"""
+<style>
+  {FONT_IMPORT}
+  :root {{
     --bg-main: #0f172a;
     --bg-sidebar: #020617;
-    --accent: #06b6d4;
+    --accent: #53CBF3;
     --text-primary: #f8fafc;
     --border: #334155;
-  }
+  }}
 
-  /* Main Backgrounds */
-  [data-testid="stAppViewContainer"] {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-  }
-  [data-testid="stSidebar"] {
-    background-color: var(--bg-sidebar);
-  }
-  /* Sidebar Text Color */
-[data-testid="stSidebar"] * {
-  color: #ffffff !important;
-}
-
-  [data-testid="stHeader"] {
-    background-color: transparent;
-  }
+  /* Layout */
+  [data-testid="stAppViewContainer"] {{ background-color: var(--bg-main) !important; color: var(--text-primary) !important; }}
+  [data-testid="stSidebar"] {{ background-color: var(--bg-sidebar) !important; }}
+  [data-testid="stHeader"] {{ background-color: transparent !important; }}
+  [data-testid="stSidebar"] * {{ color: #ffffff !important; }}
 
   /* Metric Cards */
-  [data-testid="stMetric"] {
-    background-color: #1e293b;
-    border: 1px solid var(--border);
+  [data-testid="stMetric"] {{
+    background-color: #1e293b !important;
+    border: 1px solid var(--border) !important;
     border-radius: 10px;
     padding: 15px 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.5);
     transition: all 0.3s ease-in-out;
-  }
-  [data-testid="stMetric"]:hover {
-    transform: translateY(-3px);
-  }
-  [data-testid="stMetricValue"] {
-    color: var(--accent);
-    font-size: 1.9rem;
-    font-weight: 600;
-  }
-  [data-testid="stMetricLabel"] {
-    color: #94a3b8;
-  }
+  }}
+  [data-testid="stMetric"]:hover {{ transform: translateY(-3px); }}
+  [data-testid="stMetricValue"] {{ color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }}
+  [data-testid="stMetricLabel"] {{ color: #94a3b8 !important; }}
 
   /* File Upload */
-  [data-testid="stFileUploadDropzone"] {
-    background-color: var(--bg-main);
-    border: 2px dashed var(--border);
-    color: var(--text-primary);
-  }
+  [data-testid="stFileUploadDropzone"] > div {{
+    background-color: #080616 !important;
+    border: 2px dashed var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+  }}
+  [data-testid="stFileUploader"] button {{
+    background-color: var(--accent) !important;
+    color: var(--bg-sidebar) !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    transition: background 0.3s ease;
+  }}
+  [data-testid="stFileUploader"] button:hover {{ background-color: #3baed4 !important; }}
 
   /* Dropdowns & Select Boxes */
-  div[data-baseweb="select"] > div {
-    background-color: var(--bg-main);
-    border-color: var(--border);
-    color: var(--text-primary);
-  }
-  div[data-baseweb="popover"] div {
-    background-color: var(--bg-sidebar);
-    color: #cbd5e1;
-  }
+  div[data-baseweb="select"] > div {{ background-color: var(--bg-main) !important; border-color: var(--border) !important; color: var(--text-primary) !important; }}
+  div[data-baseweb="popover"] div {{ background-color: var(--bg-sidebar) !important; color: #cbd5e1 !important; }}
 
   /* Multiselect Tags */
-  span[data-baseweb="tag"] {
-    background-color: #164e63;
-    color: var(--accent);
-  }
+  span[data-baseweb="tag"] {{ background-color: #164e63 !important; color: var(--accent) !important; }}
 
   /* Slider */
-  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {
-    background-color: var(--accent);
-  }
-  div[data-baseweb="slider"] div[role="slider"] {
-    background-color: var(--accent);
-  }
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{ background-color: var(--accent) !important; }}
+  div[data-baseweb="slider"] div[role="slider"] {{ background-color: var(--accent) !important; }}
 
-  /* Buttons */
-  .stDownloadButton button {
-    background-color: var(--accent);
-    color: var(--bg-sidebar);
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
+  /* Download Button */
+  .stDownloadButton button {{
+    background-color: var(--accent) !important;
+    color: var(--bg-sidebar) !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
     transition: background 0.3s ease;
-  }
-  .stDownloadButton button:hover {
-    background-color: #0891b2;
-  }
+  }}
+  .stDownloadButton button:hover {{ background-color: #3baed4 !important; }}
 
-  hr { border-top: 1px solid var(--border); }
+  /* Expander */
+  [data-testid="stExpander"] details summary {{
+    background-color: #1e293b !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+  }}
+  [data-testid="stExpander"] details summary:hover {{ background-color: #334155 !important; }}
+  [data-testid="stExpander"] details summary svg {{ fill: var(--text-primary) !important; }}
 
-  /* Hide Default Streamlit Menu */
-  #MainMenu {visibility: hidden;}
-  footer {visibility: hidden;}
+  hr {{ border-top: 1px solid var(--border); }}
+  #MainMenu, footer {{ visibility: hidden; }}
 </style>
 """
 
 # === LIGHT MODE THEME ===
-light_theme_css = """
+LIGHT_THEME = f"""
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap');
-  html, body, [class*="css"] { font-family: 'Poppins', sans-serif; }
-
-  :root {
+  {FONT_IMPORT}
+  :root {{
     --bg-main: #f8fafc;
     --bg-sidebar: #f1f5f9;
     --accent: #2563eb;
     --text-primary: #334155;
     --border: #cbd5e1;
-  }
+  }}
 
-  /* Main Backgrounds */
-  [data-testid="stAppViewContainer"] {
-    background-color: var(--bg-main);
-    color: var(--text-primary);
-  }
-  [data-testid="stSidebar"] {
-    background-color: var(--bg-sidebar);
-    color: var(--text-primary);
-  }
-  [data-testid="stHeader"] {
-    background-color: transparent;
-  }
+  /* Layout */
+  [data-testid="stAppViewContainer"] {{ background-color: var(--bg-main) !important; color: var(--text-primary) !important; }}
+  [data-testid="stSidebar"] {{ background-color: var(--bg-sidebar) !important; color: var(--text-primary) !important; }}
+  [data-testid="stHeader"] {{ background-color: transparent !important; }}
+  [data-testid="stSidebar"] * {{ color: var(--text-primary) !important; }}
 
   /* Metric Cards */
-  [data-testid="stMetric"] {
-    background-color: #ffffff;
-    border: 1px solid var(--border);
+  [data-testid="stMetric"] {{
+    background-color: #ffffff !important;
+    border: 1px solid var(--border) !important;
     border-radius: 10px;
     padding: 15px 20px;
     box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     transition: all 0.3s ease-in-out;
-  }
-  [data-testid="stMetric"]:hover {
-    transform: translateY(-3px);
-  }
-  [data-testid="stMetricValue"] {
-    color: var(--accent);
-    font-size: 1.9rem;
-    font-weight: 600;
-  }
-  [data-testid="stMetricLabel"] {
-    color: #64748b;
-  }
+  }}
+  [data-testid="stMetric"]:hover {{ transform: translateY(-3px); }}
+  [data-testid="stMetricValue"] {{ color: var(--accent) !important; font-size: 1.9rem !important; font-weight: 600 !important; }}
+  [data-testid="stMetricLabel"] {{ color: #64748b !important; }}
 
   /* File Upload */
-  [data-testid="stFileUploadDropzone"] {
-    background-color: #ffffff;
-    border: 2px dashed var(--border);
-    color: var(--text-primary);
-  }
+  [data-testid="stFileUploadDropzone"] > div {{
+    background-color: #ffffff !important;
+    border: 2px dashed var(--border) !important;
+    color: var(--text-primary) !important;
+    border-radius: 8px;
+  }}
+  [data-testid="stFileUploader"] button {{
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+    transition: background 0.3s ease;
+  }}
+  [data-testid="stFileUploader"] button:hover {{ background-color: #1e40af !important; }}
 
   /* Dropdowns & Select Boxes */
-  div[data-baseweb="select"] > div {
-    background-color: #ffffff;
-    border-color: var(--border);
-    color: var(--text-primary);
-  }
-  div[data-baseweb="popover"] div {
-    background-color: #ffffff;
-    color: var(--text-primary);
-  }
+  div[data-baseweb="select"] > div {{ background-color: #ffffff !important; border-color: var(--border) !important; color: var(--text-primary) !important; }}
+  div[data-baseweb="popover"] div {{ background-color: #ffffff !important; color: var(--text-primary) !important; }}
 
   /* Multiselect Tags */
-  span[data-baseweb="tag"] {
-    background-color: #bfdbfe;
-    color: var(--accent);
-  }
+  span[data-baseweb="tag"] {{ background-color: #bfdbfe !important; color: var(--accent) !important; }}
 
   /* Slider */
-  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {
-    background-color: var(--accent);
-  }
-  div[data-baseweb="slider"] div[role="slider"] {
-    background-color: var(--accent);
-  }
+  div[data-baseweb="slider"] div[data-testid="stTickBar"] > div {{ background-color: var(--accent) !important; }}
+  div[data-baseweb="slider"] div[role="slider"] {{ background-color: var(--accent) !important; }}
 
-  /* Buttons */
-  .stDownloadButton button {
-    background-color: var(--accent);
-    color: #ffffff;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
+  /* Download Button */
+  .stDownloadButton button {{
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
     transition: background 0.3s ease;
-  }
-  .stDownloadButton button:hover {
-    background-color: #1e40af;
-  }
+  }}
+  .stDownloadButton button:hover {{ background-color: #1e40af !important; }}
 
-  hr { border-top: 1px solid var(--border); }
+  /* Expander */
+  [data-testid="stExpander"] details summary {{
+    background-color: #f1f5f9 !important;
+    border-radius: 8px !important;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+  }}
+  [data-testid="stExpander"] details summary:hover {{ background-color: #e2e8f0 !important; }}
+  [data-testid="stExpander"] details summary svg {{ fill: var(--text-primary) !important; }}
 
-  /* Hide Default Streamlit Menu */
-  #MainMenu {visibility: hidden;}
-  footer {visibility: hidden;}
+  hr {{ border-top: 1px solid var(--border); }}
+  #MainMenu, footer {{ visibility: hidden; }}
 </style>
 """
 
-# Apply theme
-if dark_mode_enabled:
-    st.markdown(dark_theme_css, unsafe_allow_html=True)
-else:
-    st.markdown(light_theme_css, unsafe_allow_html=True)
+# --- Apply Selected Theme ---
+st.markdown(DARK_THEME if dark_mode_enabled else LIGHT_THEME, unsafe_allow_html=True)
 
 
 st.sidebar.title("WiFi Analytics")
