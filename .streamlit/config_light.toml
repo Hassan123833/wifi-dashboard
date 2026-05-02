@@ -1,8 +1,4 @@
 [theme]
 # This sets Streamlit's base theme to light mode
 base = "light"
-primaryColor = "#0f56ee" 
-backgroundColor = "#ffffff"
-secondaryBackgroundColor = "#f1f5f9"
-textColor = "#eff2f8"
-font = "sans serif"
+
