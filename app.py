@@ -61,15 +61,11 @@ dark_theme_css = """
     color: #94a3b8;
   }
 
-  /* File Upload */
-  [data-testid="stFileUploadDropzone"] {
-    background-color: #080616 !important;
-    border: 2px dashed var(--border);
-    color: var(--text-primary);
-  }
-  div[data-testid="stFileUploadDropzone"] div {
-  background-color: #080616 !important;
-}
+ /* File Uploader Elements (Dropzone & Uploaded File Card) */
+        [data-testid="stFileUploadDropzone"] { background-color: #0f172a !important; border: 2px dashed #334155 !important; color: #f8fafc !important; }
+        [data-testid="stFileUploader"] section { background-color: #080616 !important; border: 1px solid #334155 !important; border-radius: 8px;}
+        [data-testid="stUploadedFile"] { background-color: #080616 !important; border-radius: 8px;}
+        [data-testid="stUploadedFile"] * { color: #f8fafc !important; }
   /* Dropdowns & Select Boxes */
   div[data-baseweb="select"] > div {
     background-color: var(--bg-main);
