@@ -63,7 +63,7 @@ dark_theme_css = """
 
   /* File Upload */
   [data-testid="stFileUploadDropzone"] {
-    background-color: var(--bg-main);
+    background-color: #080616;
     border: 2px dashed var(--border);
     color: var(--text-primary);
   }
