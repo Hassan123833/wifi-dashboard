@@ -190,38 +190,24 @@ light_theme_css = """
   hr { border-top: 1px solid var(--border); }
   #MainMenu {visibility: hidden;}
   footer {visibility: hidden;}
- /* Upload Button (covers all cases) */
+  /* TARGET STREAMLIT BUTTON ROOT */
+div.stButton > button,
+div.stDownloadButton > button,
 [data-testid="stFileUploader"] button,
-button[kind="secondaryFormSubmit"],
-[data-testid="baseButton-secondary"] {
-    background-color: var(--accent) !important;
+button[kind="secondaryFormSubmit"] {
+    background-color: #2563eb !important;
     color: #ffffff !important;
-    font-weight: 600 !important;
     border: none !important;
     border-radius: 6px !important;
 }
-[data-testid="stFileUploader"] button:hover,
-button[kind="secondaryFormSubmit"]:hover,
-[data-testid="baseButton-secondary"]:hover {
-    background-color: #1e40af !important;
-}
 
-/* Download Button (covers all cases) */
-.stDownloadButton > button,
-button[kind="secondaryFormSubmit"],
-[data-testid="baseButton-secondary"] {
-    background-color: var(--accent) !important;
+/* HOVER */
+div.stButton > button:hover,
+div.stDownloadButton > button:hover,
+[data-testid="stFileUploader"] button:hover {
+    background-color: #1e40af !important;
     color: #ffffff !important;
-    font-weight: 600 !important;
-    border: none !important;
-    border-radius: 6px !important;
 }
-.stDownloadButton > button:hover,
-button[kind="secondaryFormSubmit"]:hover,
-[data-testid="baseButton-secondary"]:hover {
-    background-color: #1e40af !important;
-}
-
 </style>
 """
 
