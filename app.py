@@ -190,6 +190,38 @@ light_theme_css = """
   hr { border-top: 1px solid var(--border); }
   #MainMenu {visibility: hidden;}
   footer {visibility: hidden;}
+ /* Upload Button (covers all cases) */
+[data-testid="stFileUploader"] button,
+button[kind="secondaryFormSubmit"],
+[data-testid="baseButton-secondary"] {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+[data-testid="stFileUploader"] button:hover,
+button[kind="secondaryFormSubmit"]:hover,
+[data-testid="baseButton-secondary"]:hover {
+    background-color: #1e40af !important;
+}
+
+/* Download Button (covers all cases) */
+.stDownloadButton > button,
+button[kind="secondaryFormSubmit"],
+[data-testid="baseButton-secondary"] {
+    background-color: var(--accent) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    border: none !important;
+    border-radius: 6px !important;
+}
+.stDownloadButton > button:hover,
+button[kind="secondaryFormSubmit"]:hover,
+[data-testid="baseButton-secondary"]:hover {
+    background-color: #1e40af !important;
+}
+
 </style>
 """
 
